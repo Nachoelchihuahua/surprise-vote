@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Question importante</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff0f5;
+      font-family: 'Georgia', serif;
+      overflow: hidden;
+    }
+
+    .hearts-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart-float {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: floatUp linear infinite;
+      opacity: 0.25;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0) scale(1);   opacity: 0.25; }
+      100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 3rem 2.5rem;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 8px 40px rgba(255, 100, 150, 0.15);
+      max-width: 500px;
+      width: 90vw;
+    }
+
+    .deco-hearts {
+      font-size: 2rem;
+      letter-spacing: 0.3rem;
+      margin-bottom: 1.2rem;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.1); }
+    }
+
+    h1 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      color: #c0335a;
+      line-height: 1.4;
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 2.5rem;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    #btn-oui {
+      background: #ff4d7d;
+      color: white;
+      box-shadow: 0 4px 14px rgba(255, 77, 125, 0.4);
+    }
+
+    #btn-oui:hover {
+      transform: scale(1.06);
+      box-shadow: 0 6px 20px rgba(255, 77, 125, 0.5);
+    }
+
+    #btn-non {
+      background: #f5f5f5;
+      color: #888;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: fixed;
+    }
+
+    /* Success screen */
+    #success {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fff0f5;
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    #success.show {
+      display: flex;
+    }
+
+    #success .big-hearts {
+      font-size: 3rem;
+      animation: pulse 1.4s ease-in-out infinite;
+      margin-bottom: 1rem;
+    }
+
+    #success h2 {
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
+      color: #c0335a;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="card">
+  <div class="deco-hearts">💗 💖 💗 💖 💗</div>
+  <h1>Est-ce que Capucine mérite son ensemble Teveo&nbsp;?</h1>
+  <div class="buttons">
+    <button class="btn" id="btn-oui" onclick="showSuccess()">OUI</button>
+    <button class="btn" id="btn-non">NON</button>
+  </div>
+</div>
+
+<div id="success">
+  <div class="big-hearts">💖 💗 💖 💗 💖</div>
+  <h2>Bonne réponse&nbsp;!<br>Fonce, mon poulain 🐎</h2>
+</div>
+
+<script>
+  // Floating background hearts
+  const bg = document.getElementById('heartsBg');
+  const emojis = ['💗','💖','💕','❤️','🩷'];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('span');
+    el.className = 'heart-float';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.bottom = -(Math.random() * 100) + 'vh';
+    el.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+    const duration = 6 + Math.random() * 10;
+    el.style.animationDuration = duration + 's';
+    el.style.animationDelay = -(Math.random() * duration) + 's';
+    bg.appendChild(el);
+  }
+
+  // Dodging NON button
+  const non = document.getElementById('btn-non');
+  const margin = 80; // px — how far to flee
+
+  // Place initially so it's visible
+  function randomPos() {
+    const w = window.innerWidth, h = window.innerHeight;
+    const bw = non.offsetWidth || 100, bh = non.offsetHeight || 48;
+    return {
+      x: bw/2 + Math.random() * (w - bw),
+      y: bh/2 + Math.random() * (h - bh)
+    };
+  }
+
+  let pos = { x: window.innerWidth * 0.65, y: window.innerHeight * 0.55 };
+  non.style.left = pos.x + 'px';
+  non.style.top  = pos.y + 'px';
+  non.style.transform = 'translate(-50%, -50%)';
+
+  document.addEventListener('mousemove', (e) => {
+    const dx = e.clientX - pos.x;
+    const dy = e.clientY - pos.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+
+    if (dist < margin) {
+      // Flee in the opposite direction, scaled by proximity
+      const force = (margin - dist) / margin;
+      const angle = Math.atan2(dy, dx);
+      const flee = margin * (0.5 + force);
+
+      let nx = pos.x - Math.cos(angle) * flee;
+      let ny = pos.y - Math.sin(angle) * flee;
+
+      // Keep within viewport
+      const bw = non.offsetWidth / 2, bh = non.offsetHeight / 2;
+      nx = Math.max(bw, Math.min(window.innerWidth  - bw, nx));
+      ny = Math.max(bh, Math.min(window.innerHeight - bh, ny));
+
+      pos = { x: nx, y: ny };
+      non.style.left = pos.x + 'px';
+      non.style.top  = pos.y + 'px';
+    }
+  });
+
+  // Touch: move away from finger
+  document.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    const ev = new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY });
+    document.dispatchEvent(ev);
+  }, { passive: true });
+
+  function showSuccess() {
+    document.getElementById('success').classList.add('show');
+  }
+</script>
+</body>
+</html>
