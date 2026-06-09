@@ -1,6 +1,6 @@
 # 💗 Est-ce que Capucine mérite son ensemble Teveo ?
 
-🔗 **[Voter ici](https://nachoelchihuahua.github.io/suprise-vote/)**
+🔗 **[Voter ici](https://nachoelchihuahua.github.io/surprise-vote/)**
 
 ## C'est quoi ce projet ?
 
